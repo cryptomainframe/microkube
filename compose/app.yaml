@@ -49,4 +49,13 @@ services:
     image: node:11
     volumes:
       - ../../mikroapp:/home/node
-    command: yarn start
+    command:
+      - sh
+      - -c
+      - |
+        cd /home/node
+        yarn start
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: 'Host: www.wb.local'
+      traefik.port: 3000

@@ -25,7 +25,7 @@ namespace :run do
     task :hooks do
         puts '----- Running hooks -----'
         sh 'docker-compose run --rm peatio bash -c "./bin/link_config && bundle exec rake db:create db:migrate db:seed"'
-        # exec 'docker-compose run --rm barong bash -c "./bin/link_config && ./bin/setup"'
+        sh 'docker-compose run --rm barong bash -c "./bin/setup"'
     end
 end
 
@@ -38,7 +38,7 @@ task :run do
     # Rake::Task["run:cryptnodes"].invoke
     Rake::Task["run:hooks"].invoke
 
-    sh 'docker-compose up -d peatio auth proxy gateway'
+    sh 'docker-compose up -d auth peatio barong proxy gateway'
 end
 
 desc 'Stop all runnning docker contrainers'

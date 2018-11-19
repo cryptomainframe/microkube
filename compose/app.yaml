@@ -44,3 +44,9 @@ services:
       - "8001:8001"
     volumes:
       - ../config/keys:/secrets:ro
+
+  mikroapp:
+    image: node:11
+    volumes:
+      - ../../mikroapp:/home/node
+    command: yarn start

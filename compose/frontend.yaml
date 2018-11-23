@@ -5,16 +5,19 @@ services:
     image: node:11
     volumes:
       - ../vendor/frontend:/home/node
+    expose:
+      - '4200'
     command:
       - sh
       - -c
       - |
         cd /home/node
-        yarn start
+        yarn exec -- ng serve --host 0.0.0.0 --disable-host-check
     labels:
       traefik.enable: true
+      traefik.frontend.priority: 20
       traefik.frontend.rule: 'Host: www.wb.local'
-      traefik.port: 3000
+      traefik.port: 4200
   control-tower:
     image: node:11
     volumes:

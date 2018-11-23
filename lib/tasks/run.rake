@@ -4,7 +4,10 @@ namespace :run do
     task :deps do
         puts '----- Starting dependencies -----'
         sh 'docker-compose up -d vault db redis rabbitmq mailcatcher ranger'
-        sh 'docker-compose run --rm vault secrets enable totp || echo Vault already enabled'
+        sh 'docker-compose run --rm vault secrets enable totp \
+            && docker-compose run --rm vault secrets disable secret \
+            && docker-compose run --rm vault secrets enable -path=secret -version=1 kv \
+            || echo Vault already enabled'
         sleep 3
     end
 
@@ -25,20 +28,20 @@ namespace :run do
     task :hooks do
         puts '----- Running hooks -----'
         sh 'docker-compose run --rm peatio bash -c "./bin/link_config && bundle exec rake db:create db:migrate db:seed"'
-        # exec 'docker-compose run --rm barong bash -c "./bin/link_config && ./bin/setup"'
+#       sh 'docker-compose run --rm barong bash -c "./bin/init_config && bundle exec rake db:create db:migrate db:seed"'
     end
 end
 
 desc 'Run the micro'
 task :run do
-    Rake::Task["config:render"].invoke
+    # Rake::Task["config:render"].invoke
     Rake::Task["proxy"].invoke
     Rake::Task["run:deps"].invoke
-    Rake::Task["run:daemons"].invoke
+    # Rake::Task["run:daemons"].invoke
     # Rake::Task["run:cryptnodes"].invoke
     Rake::Task["run:hooks"].invoke
 
-    sh 'docker-compose up -d peatio auth proxy gateway'
+    sh 'docker-compose up -d peatio auth proxy gateway frontend barong'
 end
 
 desc 'Stop all runnning docker contrainers'

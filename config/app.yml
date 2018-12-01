@@ -1,9 +1,9 @@
 app:
-  name: "Mikro"
-  domain: "app.local"
+  name: "crypto Mainframe"
+  domain: "cmfexchange.co.uk"
 ssl:
   enabled: true
-  email: "support@example.com"
+  email: "support@cryptomainframe.co.uk"
 vendor:
   frontend: "git@github.com:rubykube/mikroapp.git"
   tower: "git@github.com:openware/tower.git"
